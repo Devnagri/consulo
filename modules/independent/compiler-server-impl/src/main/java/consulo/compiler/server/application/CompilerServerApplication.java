@@ -99,7 +99,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   private void loadApplicationComponents() {
-    PluginManagerCore.initPlugins(new StartupProgress() {
+    PluginManagerCore.initPlugins(this, new StartupProgress() {
       @Override
       public void showProgress(String message, float progress) {
 

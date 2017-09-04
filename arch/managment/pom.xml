@@ -201,6 +201,27 @@
         <version>${cglib.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <classifier>no_aop</classifier>
+        <version>4.1.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>javax.inject</groupId>
+        <artifactId>javax.inject</artifactId>
+        <version>1</version>
+      </dependency>
+      <dependency>
         <groupId>dk.brics.automaton</groupId>
         <artifactId>automaton</artifactId>
         <version>1.11-8</version>

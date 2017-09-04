@@ -16,13 +16,12 @@
 
 package com.intellij.openapi.module.impl;
 
+import com.google.inject.Binder;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.components.ExtensionAreas;
+import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
@@ -66,24 +65,21 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     myProject = project;
     myModuleScopeProvider = new ModuleScopeProviderImpl(this);
     myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
+
+    initInjector();
   }
 
   @Override
-  protected void bootstrapPicoContainer(@NotNull String name) {
-    Extensions.instantiateArea(ExtensionAreas.MODULE, this, (AreaInstance)getParentComponentManager());
-    super.bootstrapPicoContainer(name);
+  protected void bootstrapBinder(String name, Binder binder) {
+    super.bootstrapBinder(name, binder);
 
-    getPicoContainer().registerComponentImplementation(ModulePathMacroManager.class);
+    binder.bind(ModulePathMacroManager.class);
   }
 
-
- @Override
-  public void loadModuleComponents() {
-    final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
-      loadComponentsConfiguration(plugin.getModuleComponents(), plugin, false);
-    }
+  @NotNull
+  @Override
+  protected ComponentConfig[] selectComponentConfigs(IdeaPluginDescriptor descriptor) {
+    return descriptor.getModuleComponents();
   }
 
   @Override

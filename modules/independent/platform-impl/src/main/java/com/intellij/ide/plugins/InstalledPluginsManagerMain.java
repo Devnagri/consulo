@@ -19,6 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -124,7 +125,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
   @Nullable
   public static IdeaPluginDescriptorImpl loadDescriptionFromJar(final File file) throws IOException {
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file);
+    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(ApplicationManager.getApplication(), file);
     if (descriptor == null) {
       if (file.getName().endsWith(".zip")) {
         final File outputDir = FileUtil.createTempDirectory("plugin", "");
@@ -132,7 +133,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
           ZipUtil.extract(file, outputDir, null);
           final File[] files = outputDir.listFiles();
           if (files != null && files.length == 1) {
-            descriptor = PluginManagerCore.loadDescriptor(files[0], PluginManagerCore.PLUGIN_XML);
+            descriptor = PluginManagerCore.loadDescriptor(ApplicationManager.getApplication(), files[0], PluginManagerCore.PLUGIN_XML);
           }
         }
         finally {

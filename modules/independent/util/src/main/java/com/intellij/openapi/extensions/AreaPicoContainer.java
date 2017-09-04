@@ -20,5 +20,6 @@ import org.picocontainer.MutablePicoContainer;
 /**
  * @author Alexander Kireyev
  */
+@Deprecated
 public interface AreaPicoContainer extends MutablePicoContainer {
 }

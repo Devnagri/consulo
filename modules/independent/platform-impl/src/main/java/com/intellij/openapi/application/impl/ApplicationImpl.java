@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.application.impl;
 
+import com.google.inject.Binder;
 import com.intellij.CommonBundle;
 import com.intellij.concurrency.IdeaForkJoinWorkerThreadFactory;
 import com.intellij.concurrency.JobScheduler;
@@ -31,6 +32,8 @@ import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.components.ComponentConfig;
+import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
@@ -154,16 +157,20 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   };
 
   @Override
-  protected void bootstrapPicoContainer(@NotNull String name) {
-    super.bootstrapPicoContainer(name);
-    getPicoContainer().registerComponentImplementation(IComponentStore.class, ApplicationStoreImpl.class);
-    getPicoContainer().registerComponentImplementation(ApplicationPathMacroManager.class);
+  protected void bootstrapRootBinder(String name, Binder binder) {
+    binder.bind(Application.class).toInstance(this);
+    binder.bind(ApplicationEx.class).toInstance(this);
+    binder.bind(ApplicationEx2.class).toInstance(this);
+
+    binder.bind(IComponentStore.class).to(ApplicationStoreImpl.class);
+    binder.bind(PathMacroManager.class).to(ApplicationPathMacroManager.class);
+    binder.bind(TransactionGuard.class).to(TransactionGuardImpl.class);
   }
 
   @Override
   @NotNull
   public IApplicationStore getStateStore() {
-    return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
+    return (IApplicationStore)getInjector().getInstance(IComponentStore.class);
   }
 
   @Override
@@ -185,8 +192,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
 
-    getPicoContainer().registerComponentInstance(Application.class, this);
-
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
     String debugDisposer = System.getProperty("idea.disposer.debug");
@@ -203,7 +208,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myDoNotSave = isUnitTestMode || isHeadless;
     gatherStatistics = LOG.isDebugEnabled() || isUnitTestMode() || isInternal();
 
-    loadApplicationComponents();
+    initPlugins(this);
 
     if (myTestModeFlag) {
       registerShutdownHook();
@@ -215,7 +220,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       StartupUtil.addExternalInstanceListener(commandLineArgs -> {
         LOG.info("ApplicationImpl.externalInstanceListener invocation");
         final Project project = CommandLineProcessor.processExternalCommandLine(commandLineArgs, null);
-        final IdeFrame  frame = WindowManager.getInstance().getIdeFrame(project);
+        final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
 
         if (frame != null) AppIcon.getInstance().requestFocus(frame);
       });
@@ -248,6 +253,13 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
 
     NoSwingUnderWriteAction.watchForEvents(this);
+
+    initRootInjector();
+  }
+
+  private void initPlugins(Application application) {
+    PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
+    PluginManagerCore.initPlugins(application, mySplash);
   }
 
   /**
@@ -321,15 +333,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return myLock.isReadLockedByThisThread();
   }
 
-  private void loadApplicationComponents() {
-    PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
-    PluginManagerCore.initPlugins(mySplash);
-    IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
-    for (IdeaPluginDescriptor plugin : plugins) {
-      if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
-        loadComponentsConfiguration(plugin.getAppComponents(), plugin, false);
-      }
-    }
+  @NotNull
+  @Override
+  protected ComponentConfig[] selectComponentConfigs(IdeaPluginDescriptor descriptor) {
+    return descriptor.getAppComponents();
   }
 
   @Override

@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ComponentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
+public abstract class PlatformComponentManagerImpl extends consulo.inject.ComponentManagerImpl {
   private boolean myHandlingInitComponentError;
 
   protected PlatformComponentManagerImpl(ComponentManager parent) {

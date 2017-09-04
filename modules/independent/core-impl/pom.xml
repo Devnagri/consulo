@@ -41,6 +41,11 @@
       <artifactId>consulo-core-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-platform-resources-en</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!--external dependencies-->
     <dependency>
       <groupId>com.google.guava</groupId>

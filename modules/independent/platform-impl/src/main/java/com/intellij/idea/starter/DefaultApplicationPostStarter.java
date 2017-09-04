@@ -46,6 +46,7 @@ import java.awt.*;
 
 /**
  * Used via reflection
+ *
  * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  */
 @SuppressWarnings("unused")
@@ -122,7 +123,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     }
 
     app.invokeLater(() -> {
-      if(!args.isNoRecentProjects()) {
+      if (!args.isNoRecentProjects()) {
         Project projectFromCommandLine = null;
         if (myApplicationStarter.isPerformProjectLoad()) {
           projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);

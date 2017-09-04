@@ -1,5 +1,6 @@
 package com.intellij.ide.plugins;
 
+import com.intellij.openapi.application.ApplicationManager;
 import consulo.testFramework.util.TestPathUtil;
 import junit.framework.TestCase;
 
@@ -15,7 +16,7 @@ public class PluginDescriptorTest extends TestCase {
     String path = TestPathUtil.getTestDataPath().replace(File.separatorChar, '/') + "/ide/plugins/pluginDescriptor";
     File file = new File(path + "/asp.jar");
     assertTrue(file + " not exist", file.exists());
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file);
+    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(ApplicationManager.getApplication(), file);
     assertNotNull(descriptor);
   }
 }

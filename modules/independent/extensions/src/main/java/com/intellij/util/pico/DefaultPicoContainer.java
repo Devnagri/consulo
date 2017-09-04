@@ -29,6 +29,7 @@ import org.picocontainer.defaults.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Deprecated
 public class DefaultPicoContainer implements AreaPicoContainer {
   private final PicoContainer parent;
   private final Set<PicoContainer> children = new THashSet<PicoContainer>();

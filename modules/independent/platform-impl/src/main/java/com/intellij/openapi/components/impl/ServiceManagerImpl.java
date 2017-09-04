@@ -80,7 +80,7 @@ public class ServiceManagerImpl implements BaseComponent {
     return Arrays.asList(extensions);
   }
 
-  public static void processAllImplementationClasses(@NotNull ComponentManagerImpl componentManager,
+  public static void processAllImplementationClasses(@NotNull consulo.inject.ComponentManagerImpl componentManager,
                                                      @NotNull PairProcessor<Class<?>, PluginDescriptor> processor) {
     Collection adapters = componentManager.getPicoContainer().getComponentAdapters();
     if (adapters.isEmpty()) {

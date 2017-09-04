@@ -29,13 +29,11 @@ public class ServiceManager {
   private ServiceManager() { }
 
   public static <T> T getService(@NotNull Class<T> serviceClass) {
-    @SuppressWarnings("unchecked") T instance = (T)ApplicationManager.getApplication().getPicoContainer().getComponentInstance(serviceClass.getName());
-    return instance;
+    return ApplicationManager.getApplication().getInjector().getInstance(serviceClass);
   }
 
   public static <T> T getService(@NotNull Project project, @NotNull Class<T> serviceClass) {
-    @SuppressWarnings("unchecked") T instance = (T)project.getPicoContainer().getComponentInstance(serviceClass.getName());
-    return instance;
+    return project.getInjector().getInstance(serviceClass);
   }
 
   /**
@@ -46,12 +44,6 @@ public class ServiceManager {
    * @return Key instance.
    */
   public static <T> NotNullLazyKey<T, Project> createLazyKey(@NotNull final Class<T> serviceClass) {
-    return NotNullLazyKey.create("Service: " + serviceClass.getName(), new NotNullFunction<Project, T>() {
-      @Override
-      @NotNull
-      public T fun(Project project) {
-        return getService(project, serviceClass);
-      }
-    });
+    return NotNullLazyKey.create("Service: " + serviceClass.getName(), (NotNullFunction<Project, T>)project -> getService(project, serviceClass));
   }
 }

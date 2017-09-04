@@ -125,12 +125,7 @@ public class ApplicationStarter {
       ApplicationEx app = ApplicationManagerEx.getApplicationEx();
       app.load(PathManager.getOptionsPath());
 
-      ((TransactionGuardImpl) TransactionGuard.getInstance()).performUserActivity(new Runnable() {
-        @Override
-        public void run() {
-          myPostStarter.main(newConfigFolder, myArgs);
-        }
-      });
+      ((TransactionGuardImpl) TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(newConfigFolder, myArgs));
       myPostStarter = null; //GC it
 
       ourLoaded = true;

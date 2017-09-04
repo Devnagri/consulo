@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
+import com.google.inject.Injector;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -34,7 +35,6 @@ import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.picocontainer.PicoContainer;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -57,15 +57,15 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private final Map<String, StateStorage> myStorages = new THashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
   private final String myRootTagName;
-  private final PicoContainer myPicoContainer;
+  private final Injector myInjector;
 
   private StreamProvider myStreamProvider;
 
   public StateStorageManagerImpl(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
                                  String rootTagName,
                                  @Nullable Disposable parentDisposable,
-                                 PicoContainer picoContainer) {
-    myPicoContainer = picoContainer;
+                                 Injector injector) {
+    myInjector = injector;
     myRootTagName = rootTagName;
     myPathMacroSubstitutor = pathMacroSubstitutor;
     if (parentDisposable != null) {
@@ -247,7 +247,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Nullable
   protected StateStorage.Listener createStorageTopicListener() {
-    MessageBus messageBus = (MessageBus)myPicoContainer.getComponentInstanceOfType(MessageBus.class);
+    MessageBus messageBus = myInjector.getInstance(MessageBus.class);
     return messageBus == null ? null : messageBus.syncPublisher(StateStorage.STORAGE_TOPIC);
   }
 
