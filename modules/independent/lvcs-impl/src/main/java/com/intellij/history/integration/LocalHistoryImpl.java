@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -62,6 +63,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
     return (LocalHistoryImpl)getInstance();
   }
 
+  @Inject
   public LocalHistoryImpl(@NotNull MessageBus bus) {
     myBus = bus;
   }

@@ -63,6 +63,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -168,6 +169,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
 
   private boolean myTransparentOnlyUpdate;
 
+  @Inject
   ActionManagerImpl(KeymapManager keymapManager, DataManager dataManager) {
     myKeymapManager = keymapManager;
     myDataManager = dataManager;

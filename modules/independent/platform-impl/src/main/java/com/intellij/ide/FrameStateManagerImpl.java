@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class FrameStateManagerImpl extends FrameStateManager implements ApplicationComponent {
@@ -40,6 +41,7 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   private final BusyObject.Impl myActive;
   private final ApplicationEx2 myApp;
 
+  @Inject
   public FrameStateManagerImpl(final ApplicationEx2 app) {
     myApp = app;
     myActive = new BusyObject.Impl() {

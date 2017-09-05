@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.impl.ServiceManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -43,6 +42,7 @@ import gnu.trove.TIntIntProcedure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -135,8 +135,8 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
 
   private IdeFrame myLastFocusedFrame;
 
-  @SuppressWarnings("UnusedParameters")  // the dependencies are needed to ensure correct loading order
-  public FocusManagerImpl(ServiceManagerImpl serviceManager, WindowManager wm, UiActivityMonitor monitor) {
+  @Inject
+  public FocusManagerImpl(WindowManager wm, UiActivityMonitor monitor) {
     myApp = ApplicationManager.getApplication();
     myQueue = IdeEventQueue.getInstance();
     myActivityMonitor = monitor;

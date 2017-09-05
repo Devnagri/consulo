@@ -60,6 +60,7 @@ import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -87,6 +88,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
 
   private StubIndexState myPreviouslyRegistered;
 
+  @Inject
   public StubIndexImpl(FileBasedIndex fileBasedIndex /* need this to ensure initialization order*/ ) throws IOException {
     myStubProcessingHelper = new StubProcessingHelper(fileBasedIndex);
   }

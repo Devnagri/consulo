@@ -92,7 +92,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected void initInjector() {
-   // myInjector = bootstrap(myName);
+    // myInjector = bootstrap(myName);
   }
 
   @NotNull
@@ -114,21 +114,15 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @NotNull
-  private Injector bootstrap(@NotNull String name) {
-    AbstractModule module = new AbstractModule() {
+  private AbstractModule mainModule(@NotNull String name) {
+    return new AbstractModule() {
       @Override
       protected void configure() {
         bootstrapBinder(name, binder());
+
+        myComponentsRegistry.bind(binder());
       }
     };
-
-    if (myParentComponentManager != null) {
-      Injector injector = myParentComponentManager.getInjector();
-      return injector.createChildInjector(module);
-    }
-    else {
-      return Guice.createInjector(module);
-    }
   }
 
   @Override
@@ -138,6 +132,14 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   public void init() {
+
+    assert myInjector != null;
+
+    myComponentsRegistry.loadClasses();
+
+    myInjector = myInjector.createChildInjector(mainModule(myName));
+
+
     createComponents();
     getComponents();
   }
@@ -159,7 +161,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   private void createComponents() {
     try {
-      myComponentsRegistry.loadClasses();
 
       Class[] componentInterfaces = myComponentsRegistry.getComponentInterfaces();
       for (Class componentInterface : componentInterfaces) {
@@ -332,6 +333,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   @NotNull
+  @Deprecated
   public MutablePicoContainer getPicoContainer() {
     throw new UnsupportedOperationException();
   }
@@ -514,13 +516,19 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
           throw new RuntimeException("Component already registered: " + interfaceClass.getName());
         }
 
-        getPicoContainer().registerComponent(new ComponentConfigComponentAdapter(config, implementationClass));
+        //getPicoContainer().registerComponent(new ComponentConfigComponentAdapter(config, implementationClass));
         myInterfaceToClassMap.put(interfaceClass, implementationClass);
         myComponentClassToConfig.put(implementationClass, config);
         myComponentInterfaces.add(interfaceClass);
       }
       catch (Throwable t) {
         handleInitComponentError(t, null, config);
+      }
+    }
+
+    private void bind(Binder binder) {
+      for (Map.Entry<Class, Class> entry : myInterfaceToClassMap.entrySet()) {
+        binder.bind(entry.getKey()).to(entry.getValue());
       }
     }
 

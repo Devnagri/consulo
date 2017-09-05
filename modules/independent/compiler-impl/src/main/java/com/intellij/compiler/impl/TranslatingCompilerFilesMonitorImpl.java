@@ -65,6 +65,7 @@ import gnu.trove.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -189,6 +190,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private boolean myForceCompiling;
 
+  @Inject
   public TranslatingCompilerFilesMonitorImpl(VirtualFileManager vfsManager, ProjectManager projectManager, Application application) {
     myProjectManager = projectManager;
 

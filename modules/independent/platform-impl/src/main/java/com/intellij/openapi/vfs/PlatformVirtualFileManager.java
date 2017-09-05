@@ -24,9 +24,12 @@ import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
+
 public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   @NotNull private final ManagingFS myManagingFS;
 
+  @Inject
   public PlatformVirtualFileManager(@NotNull VirtualFileSystem[] fileSystems, @NotNull MessageBus bus, @NotNull ManagingFS managingFS) {
     super(fileSystems, bus);
     myManagingFS = managingFS;

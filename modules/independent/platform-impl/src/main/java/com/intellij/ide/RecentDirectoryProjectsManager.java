@@ -26,6 +26,8 @@ import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
+
 @State(
   name = "RecentProjectsManager",
   storages = {
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
   }
 )
 public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
+  @Inject
   public RecentDirectoryProjectsManager(MessageBus messageBus) {
     super(messageBus);
   }

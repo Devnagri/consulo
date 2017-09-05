@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import java.util.*;
 
 @State(
@@ -52,6 +53,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   public static boolean ourKeymapManagerInitialized = false;
 
+  @Inject
   KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemesManagerFactory factory) {
     mySchemesManager = factory.createSchemesManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<KeymapImpl>() {
       @NotNull

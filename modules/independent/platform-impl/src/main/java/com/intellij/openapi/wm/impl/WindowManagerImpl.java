@@ -48,6 +48,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -112,9 +113,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   private final DataManager myDataManager;
   private final ActionManagerEx myActionManager;
 
-  /**
-   * invoked by reflection
-   */
+  @Inject
   public WindowManagerImpl(DataManager dataManager,
                            ActionManagerEx actionManager,
                            MessageBus bus) {

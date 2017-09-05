@@ -37,6 +37,7 @@ import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -63,6 +64,7 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
   private volatile long myRefreshSessionId;
 
+  @Inject
   public SaveAndSyncHandlerImpl(@NotNull GeneralSettings generalSettings,
                                 @NotNull ProgressManager progressManager,
                                 @NotNull FrameStateManager frameStateManager,

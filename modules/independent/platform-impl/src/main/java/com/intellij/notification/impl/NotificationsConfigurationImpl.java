@@ -27,6 +27,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -61,6 +62,7 @@ public class NotificationsConfigurationImpl
   public boolean SHOW_BALLOONS = true;
   public boolean SYSTEM_NOTIFICATIONS = true;
 
+  @Inject
   public NotificationsConfigurationImpl(@NotNull MessageBus bus) {
     myMessageBus = bus;
   }
